@@ -5,6 +5,7 @@
 # arguments as git-log. Assumes "origin" is the remote if no
 # branch.<current>.remote configuration exists (or "trunk" for repositories
 # that seem to have git-svn remotes).
+# Adapted from <http://scie.nti.st/2007/12/7/git-notpushed>.
 #
 # Usage:
 #   git notpushed [arguments to git log]
