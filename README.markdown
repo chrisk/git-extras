@@ -14,7 +14,7 @@ work on both git and git-svn repos.
 
 ## Usage
 
-### `git notpushed`
+### git notpushed
 
     git notpushed [arguments to git log]
 
