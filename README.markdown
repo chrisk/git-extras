@@ -16,8 +16,6 @@ work on both git and git-svn repos.
 
 ### git notpushed
 
-    git notpushed [arguments to git log]
-
 Lists commits you haven't pushed to your remote yet, in a quick one-line
 format. Optionally accepts same arguments as `git-log`. Assumes "origin" is
 the remote if no `branch.<current>.remote` configuration exists (or "trunk"
