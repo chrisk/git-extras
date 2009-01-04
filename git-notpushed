@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# git-notpushed
+# Shows commits you haven't pushed to the remote yet. Optionally accepts same
+# arguments as git-log. Assumes "origin" is the remote if no
+# branch.<current>.remote configuration exists (or "trunk" for repositories
+# that seem to have git-svn remotes).
+#
+# Usage:
+#   git notpushed [arguments to git log]
+#
+
+
+# Pure git or git-svn? (there must be a better way to do this...)
+git_svn_remotes=`git config --get-regexp svn-remote`
+if [ "$git_svn_remotes" != "" ]; then
+  is_git_svn=1
+else
+  is_git_svn=0
+fi
+
+# Get the current branch
+current_branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+
+# Figure out the origin for the current branch
+origin=$(git config --get "branch.$current_branch.remote")
+if [ "$origin" == "" ]; then
+  if [ "$is_git_svn" == 1 ]; then
+    origin=${origin:-trunk}
+  else
+    origin=${origin:-origin}
+  fi
+fi
+if [ "$is_git_svn" == 1 ]; then
+  origin="^remotes/$origin"
+else
+  origin="^remotes/$origin/$current_branch"
+fi
+
+# Show the commits since the origin's HEAD in a nice one-line format
+git log --pretty=tformat:"%Cred%h%Creset %s (%ar)" $@ $current_branch $origin --
