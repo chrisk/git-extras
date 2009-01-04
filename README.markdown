@@ -20,3 +20,9 @@ Lists commits you haven't pushed to your remote yet, in a quick one-line
 format. Optionally accepts same arguments as `git-log`. Assumes "origin" is
 the remote if no `branch.<current>.remote` configuration exists (or "trunk"
 for repositories that seem to have git-svn remotes).
+
+
+## License
+
+Copyright 2009 Chris Kampmeier  
+This package is released under the MIT license.
