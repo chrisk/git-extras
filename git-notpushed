@@ -38,5 +38,5 @@ else
   origin="^remotes/$origin/$current_branch"
 fi
 
-# Show the commits since the origin's HEAD in a nice one-line format
-git log --pretty=tformat:"%Cred%h%Creset %s (%ar)" $@ $current_branch $origin --
+# Show the commits since the origin's HEAD in a nice one-line format, with no paging
+GIT_PAGER=cat git log --pretty=tformat:"%Cred%h%Creset %s (%ar)" $@ $current_branch $origin --
