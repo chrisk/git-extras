@@ -11,26 +11,33 @@
 # Example:
 #   git test-notpushed rake
 
+
+def formatted_output(current_action = nil, message = '')
+  reverse, bold, reset = "\e[7m", "\e[1m", "\e[0m"
+
+  if current_action.nil?
+    "#{bold}#{message}#{reset}"
+  else
+    "#{reverse} #{current_action} #{reset} #{bold}#{message}#{reset}"
+  end
+end
+
+
 command = $*.join(' ')
 commits = `git-notpushed --pretty=format:%H`
 current_branch = `git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'`
 
-reverse = "\e[7m"
-bold    = "\e[1m"
-reset   = "\e[0m"
-
-commits.each do |line|
-  sha  = line.split.first
-  puts "#{reverse} Switching to #{reset} #{bold}#{line}#{reset}"
+commits.each do |sha|
+  puts formatted_output("Switching to", sha)
   system "git checkout -q #{sha}"
 
-  puts "#{reverse} Running test #{reset} #{bold}#{command}#{reset}"
+  puts formatted_output("Running test", command)
   system command
   if !$?.success?
-    puts "#{bold}Error running test!#{reset}\n\n"
+    puts formatted_output(nil, "Error running test!\n")
     break
   end
 end
 
-puts "#{reverse} Switching to #{reset} #{bold}#{current_branch}#{reset}"
+puts formatted_output("Switching to", current_branch)
 `git checkout -q #{current_branch}`
