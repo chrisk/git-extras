@@ -37,9 +37,12 @@ commits.each do |sha|
   system "git checkout -q #{sha}"
 
   puts formatted_output("Running test", command)
+  puts
   system command
   if !$?.success?
-    puts formatted_output(nil, "Error running test!\n")
+    puts formatted_output(nil, "Error running test!")
+    puts formatted_output(nil, "Commit #{sha[0...10]} returned status code #{$?.exitstatus}.\n")
     break
   end
+  puts
 end
