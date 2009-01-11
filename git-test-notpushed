@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+#
+# git-test-notpushed
+# Runs a command against a checkout of each commit you haven't pushed to the
+# remote yet. Handy for running an automated test suite against each of your
+# changes. Stops early if the command returns a non-zero status code.
+#
+# Usage:
+#   git test-notpushed command-to-run
+#
+# Example:
+#   git test-notpushed rake
+
+command = $*.join(' ')
+commits = `git-notpushed --pretty=format:%H`
+current_branch = `git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'`
+
+reverse = "\e[7m"
+bold    = "\e[1m"
+reset   = "\e[0m"
+
+commits.each do |line|
+  sha  = line.split.first
+  puts "#{reverse} Switching to #{reset} #{bold}#{line}#{reset}"
+  system "git checkout -q #{sha}"
+
+  puts "#{reverse} Running test #{reset} #{bold}#{command}#{reset}"
+  system command
+  if !$?.success?
+    puts "#{bold}Error running test!#{reset}\n\n"
+    break
+  end
+end
+
+puts "#{reverse} Switching to #{reset} #{bold}#{current_branch}#{reset}"
+`git checkout -q #{current_branch}`
