@@ -33,6 +33,7 @@ at_exit do
 end
 
 commits.each do |sha|
+  sha.strip!
   puts formatted_output("Switching to", sha)
   system "git checkout -q #{sha}"
 
