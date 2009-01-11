@@ -27,6 +27,11 @@ command = $*.join(' ')
 commits = `git-notpushed --pretty=format:%H`
 current_branch = `git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'`
 
+at_exit do
+  puts formatted_output("Returning to", current_branch)
+  `git checkout -q #{current_branch}`
+end
+
 commits.each do |sha|
   puts formatted_output("Switching to", sha)
   system "git checkout -q #{sha}"
@@ -38,6 +43,3 @@ commits.each do |sha|
     break
   end
 end
-
-puts formatted_output("Switching to", current_branch)
-`git checkout -q #{current_branch}`
