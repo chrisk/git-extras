@@ -32,7 +32,7 @@ at_exit do
   `git checkout -q #{current_branch}`
 end
 
-commits.each do |sha|
+commits.split.reverse.each do |sha|
   sha.strip!
   puts formatted_output("Switching to", sha)
   system "git checkout -q #{sha}"
