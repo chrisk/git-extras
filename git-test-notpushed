@@ -6,7 +6,7 @@
 # changes. Stops early if the command returns a non-zero status code.
 #
 # Usage:
-#   git test-notpushed command-to-run
+#   git test-notpushed command
 #
 # Example:
 #   git test-notpushed rake
