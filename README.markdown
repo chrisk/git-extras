@@ -21,7 +21,7 @@ format. Optionally accepts same arguments as `git-log`. Assumes "origin" is
 the remote if no `branch.<current>.remote` configuration exists (or "trunk"
 for repositories that seem to have git-svn remotes).
 
-### git test-notpushed [command]
+### git test-notpushed \[command\]
 
 Runs `command` against a checkout of each commit you haven't pushed to the
 remote yet. Handy for running an automated test suite against each of your
