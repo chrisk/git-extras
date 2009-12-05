@@ -8,6 +8,11 @@
 # Usage:
 #   git rewrite-dates [-q]
 
+def dirty?
+  `git diff-files --quiet`
+  $?.exitstatus.nonzero?
+end
+
 def quiet?
   abort "Too many arguments" if ARGV.size > 1
   quiet = ARGV[0] =~ /^-q|--quiet$/
@@ -27,6 +32,8 @@ def rewrite_local_commit_timestamps
     `git filter-branch --force --env-filter '#{env_filter}' #{ref}~..HEAD`
   end
 end
+
+abort "Cannot rewrite branch with a dirty working directory." if dirty?
 
 unless quiet?
   print "\nRewrite the dates of un-pushed commits to the current time? [y/N] "
