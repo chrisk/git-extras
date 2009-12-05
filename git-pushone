@@ -33,21 +33,8 @@ def current_branch
   `git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'`.strip
 end
 
-def refs_notpushed_chronologically
-  `git notpushed --pretty=format:%H`.split("\n").map { |sha| sha.strip }.reverse
-end
-
 def ref_to_push
-  refs_notpushed_chronologically.first
-end
-
-def rewrite_local_commit_timestamps
-  commit_count = refs_notpushed_chronologically.size
-  commit_count.times do |i|
-    ref = refs_notpushed_chronologically[i]
-    env_filter = %Q|if [ "$GIT_COMMIT" = "#{ref}" ]; then export GIT_AUTHOR_DATE="#{Time.now + i}" && export GIT_COMMITTER_DATE="#{Time.now + i}"; fi|
-    `git filter-branch --force --env-filter '#{env_filter}' #{ref}~..HEAD`
-  end
+  `git notpushed --pretty=format:%H`.split("\n").map { |sha| sha.strip }.last
 end
 
 def bold_text(message = "")
@@ -65,7 +52,7 @@ print "\nRewrite local commit dates and #{'force-' if force}push this commit to 
 exit unless gets =~ /y(es)?/i
 
 # Rewrite commit dates to the present
-rewrite_local_commit_timestamps
+`git rewrite-dates`
 
 # Push the commit
 command = "git push #{'--force' if force} #{remote} #{ref_to_push}:#{current_branch}".squeeze(" ")

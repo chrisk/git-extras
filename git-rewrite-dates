@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+#
+# git-rewrite-dates
+# Rewrites the author-date and committer-date on commits you haven't pushed to
+# the present time.
+#
+# Usage:
+#   git rewrite-dates
+
+def refs_notpushed_chronologically
+  `git notpushed --pretty=format:%H`.split("\n").map { |sha| sha.strip }.reverse
+end
+
+def rewrite_local_commit_timestamps
+  commit_count = refs_notpushed_chronologically.size
+  commit_count.times do |i|
+    ref = refs_notpushed_chronologically[i]
+    env_filter = %Q|if [ "$GIT_COMMIT" = "#{ref}" ]; then export GIT_AUTHOR_DATE="#{Time.now + i}" && export GIT_COMMITTER_DATE="#{Time.now + i}"; fi|
+    `git filter-branch --force --env-filter '#{env_filter}' #{ref}~..HEAD`
+  end
+end
+
+rewrite_local_commit_timestamps
