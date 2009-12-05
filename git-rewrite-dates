@@ -2,10 +2,18 @@
 #
 # git-rewrite-dates
 # Rewrites the author-date and committer-date on commits you haven't pushed to
-# the present time.
+# the present time, after prompting for confirmation. Use -q or --quiet to skip
+# the confirmation.
 #
 # Usage:
-#   git rewrite-dates
+#   git rewrite-dates [-q]
+
+def quiet?
+  abort "Too many arguments" if ARGV.size > 1
+  quiet = ARGV[0] =~ /^-q|--quiet$/
+  abort "Unknown argument #{ARGV[0]}" if quiet.nil? && ARGV.any?
+  quiet
+end
 
 def refs_notpushed_chronologically
   `git notpushed --pretty=format:%H`.split("\n").map { |sha| sha.strip }.reverse
@@ -18,6 +26,11 @@ def rewrite_local_commit_timestamps
     env_filter = %Q|if [ "$GIT_COMMIT" = "#{ref}" ]; then export GIT_AUTHOR_DATE="#{Time.now + i}" && export GIT_COMMITTER_DATE="#{Time.now + i}"; fi|
     `git filter-branch --force --env-filter '#{env_filter}' #{ref}~..HEAD`
   end
+end
+
+unless quiet?
+  print "\nRewrite the dates of un-pushed commits to the current time? [y/N] "
+  exit unless gets =~ /y(es)?/i
 end
 
 rewrite_local_commit_timestamps
