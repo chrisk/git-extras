@@ -20,6 +20,10 @@ def quiet?
   quiet
 end
 
+def print_notpushed
+  system "git notpushed" unless quiet?
+end
+
 def refs_notpushed_chronologically
   `git notpushed --pretty=format:%H`.split("\n").map { |sha| sha.strip }.reverse
 end
@@ -33,11 +37,16 @@ def rewrite_local_commit_timestamps
   end
 end
 
+
 abort "Cannot rewrite branch with a dirty working directory." if dirty?
 
+print_notpushed
+
 unless quiet?
-  print "\nRewrite the dates of un-pushed commits to the current time? [y/N] "
+  print "\nChange these commits' dates to now? [y/N] "
   exit unless gets =~ /y(es)?/i
 end
 
 rewrite_local_commit_timestamps
+
+print_notpushed
