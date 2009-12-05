@@ -52,7 +52,8 @@ print "\nRewrite local commit dates and #{'force-' if force}push this commit to 
 exit unless gets =~ /y(es)?/i
 
 # Rewrite commit dates to the present
-`git rewrite-dates --quiet`
+output = `git rewrite-dates --quiet`
+abort output if $?.exitstatus.nonzero?
 
 # Push the commit
 command = "git push #{'--force' if force} #{remote} #{ref_to_push}:#{current_branch}".squeeze(" ")
