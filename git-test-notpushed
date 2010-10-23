@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 #
 # git-test-notpushed
-# Runs a command against a checkout of each commit you haven't pushed to the
-# remote yet. Handy for running an automated test suite against each of your
-# changes. Stops early if the command returns a non-zero status code.
+# Runs a command against a checkout of each commit you haven't merged to master.
+# Handy for running an automated test suite against each of your changes.
+# Stops early if the command returns a non-zero status code.
 #
 # Usage:
 #   git test-notpushed command
@@ -24,7 +24,7 @@ end
 
 
 command = $*.join(' ')
-commits = `git-notpushed --pretty=format:%H`
+commits = `git log master.. --pretty=format:%H`
 current_branch = `git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||'`
 
 at_exit do
