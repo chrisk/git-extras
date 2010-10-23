@@ -1,15 +1,15 @@
 #!/usr/bin/env ruby
 #
-# git-test-notpushed
+# git-test-unmerged
 # Runs a command against a checkout of each commit you haven't merged to master.
 # Handy for running an automated test suite against each of your changes.
 # Stops early if the command returns a non-zero status code.
 #
 # Usage:
-#   git test-notpushed command
+#   git test-unmerged command
 #
 # Example:
-#   git test-notpushed rake
+#   git test-unmerged rake
 
 
 def formatted_output(current_action = nil, message = '')
@@ -25,7 +25,7 @@ end
 
 command = $*.join(' ')
 if command.empty?
-  puts formatted_output(nil, "Usage: git test-notpushed command")
+  puts formatted_output(nil, "Usage: git test-unmerged command")
   abort
 end
 
