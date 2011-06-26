@@ -5,7 +5,8 @@
 # deletes local copies of those branches if they exist. Handy for removing old
 # topic branches that you've already merged.
 #
-# It skips branches on the remote called dogfood, staging, production, or stable.
+# It skips branches on the remote that include the words master, dogfood,
+# staging, production, or stable.
 #
 # Usage:
 #   git trimbranches
@@ -25,7 +26,7 @@ function local_branch_exists {
 echo_in_bold_and_run 'git fetch'
 echo_in_bold_and_run 'git remote prune origin'
 
-echo_in_bold_and_run 'git branch -r --merged origin/master | egrep -v -w "master|dogfood|staging|production|stable"'
+echo_in_bold_and_run 'git branch -r --merged origin/master | egrep -v "master|dogfood|staging|production|stable"'
 remote_branches="$return_value"
 merged_remote_branch_count=$(echo "$remote_branches" | wc -w | sed 's/ //g')
 echo "Found $merged_remote_branch_count branches on origin which are already contained in origin/master."
