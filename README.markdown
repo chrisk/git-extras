@@ -1,7 +1,7 @@
 # Git extras
 
-These are some useful git porcelain scripts I've been using. They attempt to
-work on both git and git-svn repos.
+These are some useful git porcelain scripts I've been using. Some of the older
+ones support both git and git-svn repos.
 
 
 ## Installation
@@ -26,3 +26,9 @@ for repositories that seem to have git-svn remotes).
 Runs `command` against a checkout of each commit you haven't pushed to the
 remote yet. Handy for running an automated test suite against each of your
 changes. Stops early if the command returns a non-zero status code.
+
+### git trimbranches
+
+Removes branches on a remote that are subsets of its master branch, then also
+deletes local copies of those branches if they exist. Handy for removing old
+topic branches that you've already merged.
